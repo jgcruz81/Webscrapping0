@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 # Fetch the page content
 driver = webdriver.Chrome()  # Or webdriver.Firefox() if using Firefox
 driver.get("https://www.leagueoflegends.com/en-us/champions/")
-time.sleep(10)  # Wait for dynamic content to load
+time.sleep(7)  # Wait for dynamic content to load
 
 
 soup = BeautifulSoup(driver.page_source, "html.parser")
@@ -19,6 +19,11 @@ if start_div:
         span_tag = a_tag.find('span')
         if not span_tag:
             continue
+        
+        with open("all.txt", "a") as file:
+            aria_label = a_tag.get('aria-label')
+            if aria_label:
+                file.write(aria_label + "\n")
 
         first_div = span_tag.find('div')
         if not first_div:
@@ -34,7 +39,8 @@ if start_div:
 
         img_tag = third_div.find('img')
         if img_tag and 'src' in img_tag.attrs:
-            img_url = img_tag['src']
-            print(img_url)
+            with open("all.txt", "a") as file:
+                img_url = img_tag['src']
+                file.write(img_url + "\n")
 
 driver.quit()
